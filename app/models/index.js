@@ -6,5 +6,6 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
+db.sets = require('./set.model')(mongoose)
 
 module.exports = db

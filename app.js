@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
 
 require('./app/routes/auth.route')(app)
 require('./app/routes/user.route')(app)
+require('./app/routes/set.route')(app)
+require('./app/routes/ml.route')(app)
 
 const db = require('./app/models');
 db.mongoose
@@ -27,12 +29,22 @@ db.mongoose
   })
   .then((result) => {
     console.log('Database Connected');
-    console.log(db.url);
 
   }).catch((err) => {
     console.log('Cannot connect to database!', err);
     process.exit()
   })
+
+const loadModel = require('./services/loadModel');
+
+loadModel()
+  .then((model) => {
+    app.locals.model = model; // Set model ke app.locals
+    console.log('Model has been loaded and set in app.locals');
+  })
+  .catch((error) => {
+    console.error('Error loading model:', error);
+  });
 
 app.listen(PORT, () => {
   console.log(`server is running on http://localhost:${PORT}`);
